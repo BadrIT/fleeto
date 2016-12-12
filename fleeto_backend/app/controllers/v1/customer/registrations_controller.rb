@@ -7,11 +7,9 @@ class V1::Customer::RegistrationsController < DeviseTokenAuth::RegistrationsCont
   def create
     super do |resource|
       if resource.persisted?
-        # TODO
-        # Run a delayed job to send confirmation sms to the user
-        # myservice.send_sms_confirmation
-        # for now we will just set him as verified
         resource.generate_verification_code!
+        sms_message = "Your Fleeto Confirmation code is: #{resource.verification_code}"
+        SendSmsJob.perform_later(resource, sms_message)
       end
     end
   end
