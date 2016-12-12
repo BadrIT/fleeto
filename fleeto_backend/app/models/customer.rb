@@ -5,8 +5,12 @@ class Customer < ActiveRecord::Base
           #:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  def verified?
+    self.is_verified?
+  end
+
   def generate_verification_code!
-    self.update_columns(verification_code: SecureRandom.hex[0...5])
+    self.update_columns(verification_code: SecureRandom.hex[0...4])
   end
 
 
