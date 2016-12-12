@@ -5,6 +5,8 @@ class Customer < ActiveRecord::Base
           #:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  validates :name, :mobile, presence: true
+
   def verified?
     self.is_verified?
   end

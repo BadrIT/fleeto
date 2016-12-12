@@ -8,7 +8,6 @@ class V1::Customer::CustomersController < V1::Customer::BaseController
       @customer.update_columns(is_verified: true)
       render json: {message: "Successfully verified account!"},  status: :ok
     else
-      @customer.generate_verification_code!
       render json: {}, status: 401
     end
   end
