@@ -40,9 +40,13 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     bcrypt (3.1.11)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (9.0.6)
+    coderay (1.1.1)
     concurrent-ruby (1.0.2)
+    debug_inspector (0.0.2)
     devise (4.2.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -52,6 +56,10 @@ GEM
     devise_token_auth (0.1.39)
       devise (> 3.5.2, <= 4.2)
       rails (< 6)
+    dotenv (2.1.1)
+    dotenv-rails (2.1.1)
+      dotenv (= 2.1.1)
+      railties (>= 4.0, < 5.1)
     erubis (2.7.0)
     ffi (1.9.14)
     globalid (0.3.7)
@@ -70,12 +78,20 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
+    mysql2 (0.3.18)
     nio4r (1.2.1)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     orm_adapter (0.5.0)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-rails (0.3.4)
+      pry (>= 0.9.10)
     puma (3.6.2)
     rack (2.0.1)
+    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.0.1)
@@ -107,6 +123,7 @@ GEM
       ffi (>= 0.5.0)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
+    slop (3.6.0)
     spring (2.0.0)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -139,10 +156,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  binding_of_caller
   byebug
+  devise
   devise_token_auth
+  dotenv-rails
   listen (~> 3.0.5)
+  mysql2 (= 0.3.18)
+  pry-rails
   puma (~> 3.0)
+  rack-cors
   rails (~> 5.0.0, >= 5.0.0.1)
   spring
   spring-watcher-listen (~> 2.0.0)
