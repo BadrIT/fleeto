@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       }
 
       resources :customers, only: [] do
-        member do
+        collection do
           post :verify
         end
       end
