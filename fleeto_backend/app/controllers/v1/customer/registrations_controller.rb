@@ -11,7 +11,7 @@ class V1::Customer::RegistrationsController < DeviseTokenAuth::RegistrationsCont
         # Run a delayed job to send confirmation sms to the user
         # myservice.send_sms_confirmation
         # for now we will just set him as verified
-        resource.update_columns(is_verified: true)
+        resource.generate_verification_code!
       end
     end
   end
@@ -23,9 +23,13 @@ class V1::Customer::RegistrationsController < DeviseTokenAuth::RegistrationsCont
     devise_parameter_sanitizer.permit(:sign_up, keys: [:mobile, :name])
   end
 
-  # need to override it, as by default it will return v1_users
-  def resource_name
-    :customer
+  # # need to override it, as by default it will return v1_csutomer
+  # def resource_name
+  #   :customer
+  # end
+
+  def render_create_success
+    render json: @resource, status: :created
   end
 
 end
