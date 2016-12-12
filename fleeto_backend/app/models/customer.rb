@@ -6,6 +6,7 @@ class Customer < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   validates :name, :mobile, presence: true
+  validates :mobile, uniqueness: true, if: :verified?
 
   def verified?
     self.is_verified?
@@ -15,9 +16,5 @@ class Customer < ActiveRecord::Base
     self.update_columns(verification_code: SecureRandom.hex[0...4])
   end
 
-
-  def token_validation_response
-    CustomerSerializer.new(self, root: "User").as_json
-  end
 
 end
