@@ -17,6 +17,12 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :driver do
+      mount_devise_token_auth_for 'Driver', at: 'auth', controllers: {
+        sessions: "v1/driver/sessions",
+      }
+    end
+
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
