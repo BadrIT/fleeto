@@ -15,6 +15,13 @@ Rails.application.routes.draw do
           post :verify
         end
       end
+
+      resources :drivers, only: [] do
+        collection do
+          get :locate_near_drivers
+        end
+      end
+
     end
 
     namespace :driver do

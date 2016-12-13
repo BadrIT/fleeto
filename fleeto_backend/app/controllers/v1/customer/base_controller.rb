@@ -4,7 +4,7 @@ class V1::Customer::BaseController < ApplicationController
 
   class NotAuthorized < Exception; end
 
-  def check_customer_is_verified
+  def check_customer_is_verified!
     raise NotAuthorized unless current_customer.verified?
   end
 

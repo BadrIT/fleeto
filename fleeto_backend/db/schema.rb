@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213132413) do
+ActiveRecord::Schema.define(version: 20161213133328) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "provider",                             default: "email", null: false
@@ -86,6 +86,17 @@ ActiveRecord::Schema.define(version: 20161213132413) do
     t.index ["email"], name: "index_drivers_on_email", using: :btree
     t.index ["reset_password_token"], name: "index_drivers_on_reset_password_token", unique: true, using: :btree
     t.index ["uid", "provider"], name: "index_drivers_on_uid_and_provider", unique: true, using: :btree
+  end
+
+  create_table "trip_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "customer_id"
+    t.float    "from_lat",    limit: 24
+    t.float    "from_long",   limit: 24
+    t.float    "to_lat",      limit: 24
+    t.float    "to_long",     limit: 24
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["customer_id"], name: "index_trip_requests_on_customer_id", using: :btree
   end
 
 end
