@@ -13,4 +13,14 @@ end
 
 class ActionDispatch::IntegrationTest
   include FactoryGirl::Syntax::Methods
+
+  def sign_in(user)
+    post '/v1/customer/auth/sign_in', params: { 
+      "email"    => user.email,
+      "password" => user.password
+    }
+
+    response.headers.slice("access-token", "token-type", "client", "expiry", "uid")
+  end
+
 end

@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :trip_requests, only: [:create, :destroy]
+
     end
 
     namespace :driver do
