@@ -1,13 +1,13 @@
-class V1::Customer::CustomersController < V1::Customer::BaseController
+class Customer::V1::CustomersController < Customer::V1::BaseController
 
   skip_before_action :check_customer_is_verified!, only: [:verify]
 
   def verify
     if params[:verification_code] == current_customer.verification_code
-      current_customer.update_columns(is_verified: true)
+      current_customer.verify!
       render json: {message: "Successfully verified account!"},  status: :ok
     else
-      render json: {}, status: 401
+      render json: {message: "Wrong verification code"}, status: :unprocessable_entity
     end
   end
 

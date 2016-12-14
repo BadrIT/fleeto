@@ -1,4 +1,4 @@
-class V1::Customer::DriversController < V1::Customer::BaseController
+class Customer::V1::DriversController < Customer::V1::BaseController
 
   def locate_near_drivers
     @drivers = Customers::Drivers::LocateNearDriversService.new(current_customer).execute

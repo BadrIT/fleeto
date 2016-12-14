@@ -1,4 +1,4 @@
-class V1::Customer::BaseController < ApplicationController
+class Customer::V1::BaseController < ApplicationController
   before_action :authenticate_customer!
   before_action :check_customer_is_verified!
 
@@ -7,9 +7,10 @@ class V1::Customer::BaseController < ApplicationController
   end
 
 
-  class NotAuthorized < Exception; end
+  class NotAuthorized < SecurityError; end
+  
   rescue_from NotAuthorized do |exception|
-    render json: {}, status: 401
+    head :unauthorized
   end
 
   # for libraries that implicitly need current user

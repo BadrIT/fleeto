@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-class V1::Customer::TripRequestsControllerTest < ActionDispatch::IntegrationTest
+class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @current_customer = create(:customer, :verified)
@@ -12,7 +12,7 @@ class V1::Customer::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     trip_request = build(:trip_request)
 
     assert_difference("TripRequest.count", 1) do
-      post '/v1/customer/trip_requests', headers: @headers, params: {
+      post '/customer/v1/trip_requests', headers: @headers, params: {
         trip_request: {
           from_lat: trip_request.from_lat,
           from_long: trip_request.from_long
@@ -27,7 +27,7 @@ class V1::Customer::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     trip_request = build(:trip_request)
 
     assert_difference("TripRequest.count", 0) do
-      post '/v1/customer/trip_requests', headers: @headers, params: {
+      post '/customer/v1/trip_requests', headers: @headers, params: {
         trip_request: {
           dummy_params: ""
         }
@@ -40,7 +40,7 @@ class V1::Customer::TripRequestsControllerTest < ActionDispatch::IntegrationTest
   test "should cancel a trip request" do
     trip_request = create(:trip_request, customer: @current_customer)
     assert_difference("TripRequest.count", -1) do
-      delete "/v1/customer/trip_requests/#{trip_request.id}", headers: @headers
+      delete "/customer/v1/trip_requests/#{trip_request.id}", headers: @headers
     end
     assert_response :no_content
   end
@@ -49,7 +49,7 @@ class V1::Customer::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     # only trip request customer(owner) can cancel it
     trip_request = create(:trip_request) # creates a trip request with new customer
     assert_no_difference("TripRequest.count") do
-      delete "/v1/customer/trip_requests/#{trip_request.id}", headers: @headers
+      delete "/customer/v1/trip_requests/#{trip_request.id}", headers: @headers
     end
     assert_response :unauthorized   
   end

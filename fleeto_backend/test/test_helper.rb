@@ -2,6 +2,9 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+require 'simplecov'
+SimpleCov.start
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   # fixtures :all
@@ -15,7 +18,7 @@ class ActionDispatch::IntegrationTest
   include FactoryGirl::Syntax::Methods
 
   def sign_in(user)
-    post '/v1/customer/auth/sign_in', params: { 
+    post '/customer/v1/auth/sign_in', params: { 
       "email"    => user.email,
       "password" => user.password
     }

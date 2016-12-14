@@ -1,4 +1,4 @@
-class V1::Customer::SessionsController < DeviseTokenAuth::SessionsController
+class Driver::V1::SessionsController < DeviseTokenAuth::SessionsController
   
   protected
 

@@ -1,4 +1,4 @@
-class V1::Customer::BaseController < ApplicationController
+class Driver::V1::BaseController < ApplicationController
   before_action :authenticate_driver!
 
   # for libraries that implicitly need current user

@@ -1,4 +1,4 @@
-class V1::Customer::RegistrationsController < DeviseTokenAuth::RegistrationsController
+class Customer::V1::RegistrationsController < DeviseTokenAuth::RegistrationsController
 
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_update_params, only: [:update]
@@ -12,6 +12,11 @@ class V1::Customer::RegistrationsController < DeviseTokenAuth::RegistrationsCont
         sms_message = "Your Fleeto Confirmation code is: #{resource.verification_code}"
         SendSmsJob.perform_later(resource, sms_message)
       end
+    end
+  end
+
+  def update
+    super do |resource|
     end
   end
 

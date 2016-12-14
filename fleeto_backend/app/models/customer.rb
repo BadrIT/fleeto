@@ -8,6 +8,10 @@ class Customer < ActiveRecord::Base
   validates :name, :mobile, presence: true
   validates :mobile, uniqueness: true, if: :verified?
 
+  def verify!
+    self.update_columns(is_verified: true)
+  end
+
   def verified?
     self.is_verified?
   end

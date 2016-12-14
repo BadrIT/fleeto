@@ -1,4 +1,4 @@
-class V1::Customer::TripRequestsController < V1::Customer::BaseController
+class Customer::V1::TripRequestsController < Customer::V1::BaseController
 
   before_action :set_trip_request, only: [:destroy]
 
