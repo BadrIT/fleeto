@@ -6,4 +6,8 @@ class Customer::V1::SessionsController < DeviseTokenAuth::SessionsController
     render json: @resource
   end
 
+  def resource_name
+    :customer
+  end
+
 end

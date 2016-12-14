@@ -29,7 +29,7 @@ class ActionDispatch::IntegrationTest
   include RedisHelper
 
   def sign_in(user)
-    post '/customer/v1/auth/sign_in', params: { 
+    post "/#{user.class.name.downcase}/v1/auth/sign_in", params: { 
       "email"    => user.email,
       "password" => user.password
     }
