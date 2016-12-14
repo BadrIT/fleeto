@@ -15,11 +15,6 @@ class Customer::V1::RegistrationsController < DeviseTokenAuth::RegistrationsCont
     end
   end
 
-  def update
-    super do |resource|
-    end
-  end
-
   protected
 
   # If you have extra params to permit, append them to the sanitizer.
