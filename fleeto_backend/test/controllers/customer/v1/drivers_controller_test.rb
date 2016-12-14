@@ -16,6 +16,10 @@ class Customer::V1::DriversControllerTest < ActionDispatch::IntegrationTest
     @headers = sign_in(@current_customer)
   end
 
+  teardown do
+    clear_stored_locations
+  end
+
   test "should locate near drivers" do
     drivers = create_list(:driver, 3)
     drivers[1..-1].each{|driver| Drivers::LocationService.new(driver).set_location(random_location)}
