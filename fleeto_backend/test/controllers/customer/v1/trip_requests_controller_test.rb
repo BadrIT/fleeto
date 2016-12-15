@@ -37,6 +37,22 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "should not create a trip request when the customer is in another trip" do
+    create(:trip, customer: @current_customer, status: Trip::WAITING_FOR_DRIVER)
+
+    trip_request = build(:trip_request)
+    assert_difference("TripRequest.count", 0) do
+      post '/customer/v1/trip_requests', headers: @headers, params: {
+        trip_request: {
+          from_lat: trip_request.from_lat,
+          from_long: trip_request.from_long
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity 
+  end
+
   test "should cancel a trip request" do
     trip_request = create(:trip_request, customer: @current_customer)
     assert_difference("TripRequest.count", -1) do
