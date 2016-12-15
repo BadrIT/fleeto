@@ -6,9 +6,8 @@ class Driver::V1::SessionsController < DeviseTokenAuth::SessionsController
     render json: @resource
   end
 
-  # If you have extra params to permit, append them to the sanitizer.
-  def configure_sign_in_params
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:mobile])
+  def resource_name
+    :driver
   end
 
 end

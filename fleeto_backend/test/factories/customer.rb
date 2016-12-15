@@ -7,6 +7,7 @@ FactoryGirl.define do
     name { Faker::Name.name }
     mobile {Faker::PhoneNumber.cell_phone}
     verification_code {SecureRandom.hex[0...4]}
+
     trait :verified do
       is_verified true
     end

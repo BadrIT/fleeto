@@ -30,7 +30,7 @@ class Customer::V1::CustomersControllerTest < ActionDispatch::IntegrationTest
     # try some action
     non_verified_customer = create(:customer)
     @headers = sign_in(non_verified_customer)
-    get '/customer/v1/drivers/locate_near_drivers', headers: @headers
+    get '/customer/v1/locations/locate_near_drivers', headers: @headers
 
     assert_response :unauthorized
   end
