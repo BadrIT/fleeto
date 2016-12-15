@@ -5,6 +5,7 @@ class Customer::V1::TripRequestsController < Customer::V1::BaseController
   def create
     @trip_request = Customers::TripRequests::CreateService.new(current_customer, trip_request_params).execute
     if @trip_request.persisted?
+      Customers::TripRequests::SendToNearDriversService.new(@trip_request).execute
       render json: "Trip request created succesfully", status: :created
     else
       render json: @trip_request.errors.full_messages.to_sentence, status: :unprocessable_entity
