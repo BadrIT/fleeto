@@ -1,13 +1,6 @@
 require 'test_helper'
 
-class Drivers::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
-
-  def random_location
-    {
-      long: [-179, 179].sample, 
-      lat: [-84, 84].sample
-    }
-  end
+class Driver::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @current_driver = create(:driver)

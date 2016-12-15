@@ -12,6 +12,13 @@ module RedisHelper
     redis.del Customers::LocationService::KEY 
     redis.del Drivers::LocationService::KEY
   end
+
+  def random_location
+    {
+      long: Faker::Address.longitude,
+      lat: Faker::Address.latitude
+    }
+  end
 end
 
 class ActiveSupport::TestCase
@@ -37,4 +44,20 @@ class ActionDispatch::IntegrationTest
     response.headers.slice("access-token", "token-type", "client", "expiry", "uid")
   end
 
+end
+
+module Faker
+  class Address
+      # need to override these methods because of redis limitation
+      # https://redis.io/commands/geoadd
+      class << self
+        def latitude
+          (rand * 168) - 84
+        end
+
+        def longitude
+          (rand * 356) - 179
+        end
+      end
+  end
 end

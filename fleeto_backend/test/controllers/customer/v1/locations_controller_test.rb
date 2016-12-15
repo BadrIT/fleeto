@@ -2,13 +2,6 @@ require 'test_helper'
 
 class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
 
-  def random_location
-    {
-      long: [-179, 179].sample, 
-      lat: [-84, 84].sample
-    }
-  end
-
   setup do
     @current_customer = create(:customer, :verified)
     @customer_location = random_location

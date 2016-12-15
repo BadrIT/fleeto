@@ -44,6 +44,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :trip_requests, only: [] do
+        member do
+          post :accept
+        end
+      end
+
     end
   end
 

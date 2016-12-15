@@ -14,8 +14,7 @@ class Customer::V1::TripRequestsController < Customer::V1::BaseController
 
   def destroy
     authorize @trip_request
-    # TODO can a trip request not be canceled ?
-    Customers::TripRequests::DestroyService.new(current_customer, @trip_request).execute
+    Customers::TripRequests::DestroyService.new(@trip_request).execute
     head :no_content
   end
 
