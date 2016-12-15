@@ -5,6 +5,8 @@ class Driver < ActiveRecord::Base
           #:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  has_many :trips
+
   def in_a_trip?
     false # TODO
   end
