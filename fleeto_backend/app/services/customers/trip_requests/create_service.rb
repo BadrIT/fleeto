@@ -7,10 +7,8 @@ class Customers::TripRequests::CreateService
     @params = params
   end
   
-
   def execute
     trip_request = TripRequest.create(params.merge(customer: customer))
-    # TODO send notifications to nearby drivers
     trip_request
   end
   

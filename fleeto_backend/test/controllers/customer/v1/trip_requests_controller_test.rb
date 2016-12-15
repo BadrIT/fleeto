@@ -2,6 +2,7 @@ require 'test_helper'
 
 
 class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
 
   setup do
     @current_customer = create(:customer, :verified)
@@ -11,13 +12,18 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
   test "should create a trip request" do
     trip_request = build(:trip_request)
 
+    driver = create(:driver)
+    Drivers::LocationService.new(driver).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+
     assert_difference("TripRequest.count", 1) do
-      post '/customer/v1/trip_requests', headers: @headers, params: {
-        trip_request: {
-          from_lat: trip_request.from_lat,
-          from_long: trip_request.from_long
+      perform_enqueued_jobs do # to send request to drivers
+        post '/customer/v1/trip_requests', headers: @headers, params: {
+          trip_request: {
+            from_lat: trip_request.from_lat,
+            from_long: trip_request.from_long
+          }
         }
-      }
+      end
     end
 
     assert_response :created
