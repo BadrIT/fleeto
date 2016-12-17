@@ -6,7 +6,7 @@ class TripRequest < ApplicationRecord
 
   validate :customer_is_not_in_a_trip
 
-  PENDING, CANCELED, ACCEPTED = STATUSES = %w(pending canceled accepted)
+  PENDING, CANCELED, ACCEPTED, EXPIERED = STATUSES = %w(pending canceled accepted expired)
   enum_string :status, STATUSES
 
   # TODO this should be configurable from the admin

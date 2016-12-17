@@ -11,7 +11,7 @@ class Drivers::TripRequests::AcceptService
     @trip_request.update(status: TripRequest::ACCEPTED)
     Trip.create!(
       customer: @trip_request.customer,
-      driver: @driver, from_long: trip_request,
+      driver: @driver,
       trip_request: @trip_request,
       from_long: @trip_request.from_long,
       from_lat: @trip_request.from_lat,
