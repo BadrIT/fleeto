@@ -27,5 +27,8 @@ module FleetoBackend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.active_job.queue_adapter = :delayed_job
+    config.map_adaptors = {
+        distance_matrix: :google
+    }
   end
 end
