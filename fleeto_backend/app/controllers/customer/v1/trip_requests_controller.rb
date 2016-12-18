@@ -1,6 +1,6 @@
 class Customer::V1::TripRequestsController < Customer::V1::BaseController
 
-  before_action :set_trip_request, only: [:destroy]
+  before_action :set_trip_request, only: [:cancel]
 
   def create
     @trip_request = Customers::TripRequests::CreateService.new(current_customer, trip_request_params).execute
@@ -12,10 +12,9 @@ class Customer::V1::TripRequestsController < Customer::V1::BaseController
     end
   end
 
-  def destroy
+  def cancel
     authorize @trip_request
-    # TODO can a trip request not be canceled ?
-    Customers::TripRequests::DestroyService.new(current_customer, @trip_request).execute
+    Customers::TripRequests::CancelService.new(@trip_request).execute
     head :no_content
   end
 

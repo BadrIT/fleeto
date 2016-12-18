@@ -1,6 +1,5 @@
 require 'test_helper'
 
-
 class Customer::V1::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 

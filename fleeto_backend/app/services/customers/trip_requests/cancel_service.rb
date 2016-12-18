@@ -1,15 +1,14 @@
-class Customers::TripRequests::DestroyService
+class Customers::TripRequests::CancelService
 
   attr_accessor :customer, :trip_request
 
-  def initialize(customer, trip_request)
-    @customer = customer
+  def initialize(trip_request)
     @trip_request = trip_request
   end
   
 
   def execute
-    @trip_request.destroy
+    @trip_request.cancel!
     # TODO send notifications to nearby drivers/clear this customer from their map
   end
   
