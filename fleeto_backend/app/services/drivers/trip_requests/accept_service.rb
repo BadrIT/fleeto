@@ -8,7 +8,7 @@ class Drivers::TripRequests::AcceptService
   end
 
   def execute
-    @trip_request.update(status: TripRequest::ACCEPTED)
+    @trip_request.accept!
     Trip.create!(
       customer: @trip_request.customer,
       driver: @driver,

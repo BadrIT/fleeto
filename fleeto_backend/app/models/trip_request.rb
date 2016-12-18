@@ -17,6 +17,10 @@ class TripRequest < ApplicationRecord
     puts "Sending trip request #{self.id} to #{driver.name}...."
   end
 
+  def accept!
+    update_columns(status: ACCEPTED)
+  end
+
   def cancel!
     update_columns(status: CANCELED)
   end
