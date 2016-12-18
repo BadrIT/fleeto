@@ -25,7 +25,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :trip_requests, only: [:create, :destroy]
+      resources :trip_requests, only: [:create] do
+        member do
+          post :cancel
+        end
+      end
     end
 
   end

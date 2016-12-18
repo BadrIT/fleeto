@@ -17,6 +17,10 @@ class TripRequest < ApplicationRecord
     puts "Sending trip request #{self.id} to #{driver.name}...."
   end
 
+  def cancel!
+    update_columns(status: CANCELED)
+  end
+
   private
 
   def customer_is_not_in_a_trip

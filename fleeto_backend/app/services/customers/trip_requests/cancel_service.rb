@@ -1,4 +1,4 @@
-class Customers::TripRequests::DestroyService
+class Customers::TripRequests::CancelService
 
   attr_accessor :customer, :trip_request
 
@@ -8,7 +8,7 @@ class Customers::TripRequests::DestroyService
   
 
   def execute
-    @trip_request.destroy
+    @trip_request.cancel!
     # TODO send notifications to nearby drivers/clear this customer from their map
   end
   

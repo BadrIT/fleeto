@@ -61,19 +61,21 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
 
   test "should cancel a trip request" do
     trip_request = create(:trip_request, customer: @current_customer)
-    assert_difference("TripRequest.count", -1) do
-      delete "/customer/v1/trip_requests/#{trip_request.id}", headers: @headers
-    end
+    post "/customer/v1/trip_requests/#{trip_request.id}/cancel", headers: @headers
+    trip_request.reload
+    assert trip_request.canceled?
     assert_response :no_content
   end
 
   test "should not cancel a trip request when not authorized to" do
     # only trip request customer(owner) can cancel it
     trip_request = create(:trip_request) # creates a trip request with new customer
-    assert_no_difference("TripRequest.count") do
-      delete "/customer/v1/trip_requests/#{trip_request.id}", headers: @headers
-    end
-    assert_response :unauthorized   
+    old_status = trip_request.status
+    post "/customer/v1/trip_requests/#{trip_request.id}/cancel", headers: @headers
+    trip_request.reload  
+
+    assert trip_request.status == old_status
+    assert_response :unauthorized 
   end
 
 end

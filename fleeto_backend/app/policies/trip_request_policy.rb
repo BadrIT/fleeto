@@ -7,7 +7,7 @@ class TripRequestPolicy < ApplicationPolicy
     @trip_request = trip_request
   end
 
-  def destroy?
+  def cancel?
     trip_request.customer == user
   end
 
