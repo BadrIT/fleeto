@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         collection do
           post :set_location
           get :locate_near_drivers
+          get :distance_matrix_to_drop_off_location
         end
       end
 

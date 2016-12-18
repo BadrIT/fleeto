@@ -5,6 +5,13 @@ class Customer::V1::LocationsController < Customer::V1::BaseController
     head :no_content
   end
 
+  def distance_matrix_to_drop_off_location
+    customer_location = Customers::LocationService.new(current_customer).get_location
+    service = Map::Factory.new_service_adaptor(:distance_matrix).new(from: customer_location, to: {long: params[:long], lat: params[:lat]})
+    distance_matrix = service.execute[0]["elements"][0]
+    render json: distance_matrix
+  end
+
   def locate_near_drivers
     customer_location = Customers::LocationService.new(current_customer).get_location
     drivers_information = Drivers::LocationService.get_drivers_locations_within(params[:distance], customer_location)

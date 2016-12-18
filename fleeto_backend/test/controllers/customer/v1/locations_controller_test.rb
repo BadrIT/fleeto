@@ -12,18 +12,35 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should set location" do
-    location = random_location
-    post '/customer/v1/locations/set_location', headers: @headers, params: location
+    input_location = random_location
+    post '/customer/v1/locations/set_location', headers: @headers, params: input_location
     assert_response :success
-    fetched_location = Customers::LocationService.new(@current_customer).get_location
-    # stored location is not exact, so we use approximation
-    [:long, :lat].each do |coord|
-      assert (location[coord] - fetched_location[coord].to_f).abs < 0.1
-    end
+
+    # stored location is not exactly the same as input location, so we use approximation: we make sure that stored location
+    # is within distance of 10 M from input location
+    stored_location = Customers::LocationService.new(@current_customer).get_location
+    res = Redis.new.georadius(Customers::LocationService::KEY, input_location[:long], input_location[:lat], 10, :m)
+    assert res[0].to_i == @current_customer.id
+  end
+
+  test "should calculate distance matrix to drop off location" do
+    source_location = random_location
+    Customers::LocationService.new(@current_customer).set_location(source_location)
+    drop_off_location = {
+      long: source_location[:long] + 0.1,
+      lat: source_location[:lat] + 0.1,
+    }
+    get '/customer/v1/locations/distance_matrix_to_drop_off_location', headers: @headers, params: drop_off_location
+    
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert res["distance"].present?
+    assert res["duration"].present?
+    assert res["duration_in_traffic"].present?
   end
 
   test "should locate near drivers" do
-
+    skip
     @customer_location = random_location
     Customers::LocationService.new(@current_customer).set_location(@customer_location)
 

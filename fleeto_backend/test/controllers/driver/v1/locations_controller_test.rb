@@ -14,14 +14,16 @@ class Driver::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should set location" do
-    location = random_location
-    post '/driver/v1/locations/set_location', headers: @headers, params: location
+
+    input_location = random_location
+    post '/driver/v1/locations/set_location', headers: @headers, params: input_location
     assert_response :success
-    fetched_location = Drivers::LocationService.new(@current_driver).get_location
-    # stored location is not exact, so we use approximation
-    [:long, :lat].each do |coord|
-      assert (location[coord] - fetched_location[coord].to_f).abs < 0.1
-    end
+
+    # stored location is not exactly the same as input location, so we use approximation: we make sure that stored location
+    # is within distance of 10 M from input location
+    stored_location = Drivers::LocationService.new(@current_driver).get_location
+    res = Redis.new.georadius(Drivers::LocationService::KEY, input_location[:long], input_location[:lat], 10, :m)
+    assert res[0].to_i == @current_driver.id
   end
 
 
