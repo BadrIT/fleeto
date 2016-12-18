@@ -7,9 +7,24 @@ class Customer::V1::LocationsController < Customer::V1::BaseController
 
   def locate_near_drivers
     customer_location = Customers::LocationService.new(current_customer).get_location
-    @drivers_locations = Drivers::LocationService.get_drivers_locations_within(params[:distance], customer_location)
-    @drivers_locations.select!{|driver_info| !driver_info[:driver].in_a_trip?}
-    render json: @drivers_locations    
+    drivers_information = Drivers::LocationService.get_drivers_locations_within(params[:distance], customer_location)
+    drivers_locations = drivers_information.select{|driver_info| !driver_info[:driver].in_a_trip?}.map{|driver_info| driver_info[:location]}
+    
+    drivers_distance_matrices = Map::Factory.new_service_adaptor(:distance_matrix).new(from: drivers_locations, to: customer_location).execute
+    
+    min_duration = nil
+    drivers_distance_matrices.each do |elements_hash|
+      distance_matrix = elements_hash["elements"][0]
+      duration = distance_matrix["duration_in_traffic"]
+      if min_duration.nil? || duration["value"] < min_duration["value"]
+        min_duration = duration
+      end
+    end
+
+    render json: {
+      drivers_locations: drivers_locations,
+      min_duration: min_duration
+    }    
   end
 
 end

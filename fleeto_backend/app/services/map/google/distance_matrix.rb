@@ -9,7 +9,7 @@ module Map
         uri = URI("#{API_URL}")
         uri.query = URI.encode_www_form(query_params)
         response = Net::HTTP.get_response(uri)
-        JSON.parse(response.body)
+        JSON.parse(response.body)["rows"]
       end
 
       private

@@ -48,16 +48,23 @@ end
 
 module Faker
   class Address
-      # need to override these methods because of redis limitation
+      # need to override these methods because of redis limitation, also to get real values in real towns
       # https://redis.io/commands/geoadd
       class << self
         def latitude
-          (rand * 168) - 84
+          30 + (rand * 2) - 1
         end
 
         def longitude
-          (rand * 356) - 179
+          30 + (rand * 2) - 1
         end
       end
   end
 end
+
+TANTA = {lat: 30.790163, long: 31}
+CAIRO = {lat: 30.045691, long: 31.224296} 
+ALEXANRIA = {lat: 31.229099, long: 29.954884}
+DAMANHOUR = {lat: 31.036960, long: 30.457994}
+
+CITIES = [TANTA, CAIRO, ALEXANRIA, DAMANHOUR]

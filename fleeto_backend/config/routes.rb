@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :customers
   devise_for :drivers
 
+
   namespace :customer do
     api_version(:module => "V1", :path => {:value => "v1"}) do
       
@@ -30,10 +31,10 @@ Rails.application.routes.draw do
           post :cancel
         end
       end
+
     end
 
   end
-
 
   namespace :driver do
     api_version(:module => "V1", :path => {:value => "v1"}) do

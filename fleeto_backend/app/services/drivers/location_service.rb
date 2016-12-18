@@ -25,8 +25,10 @@ module Drivers
         driver_locations = Redis.new.georadius(KEY, from_location[:long], from_location[:lat], distance_in_km, :km, :WITHCOORD).map do |result|
           {
             driver: Driver.find(result[0]),
-            long: result[1][0],
-            lat: result[1][1]
+            location:{
+              long: result[1][0],
+              lat: result[1][1]
+            }
           }
         end
         driver_locations

@@ -12,6 +12,7 @@ module Map
         @options[:to] = [@options[:to]] unless @options[:to].is_a?(Array)
       end
 
+      # :nocov:
       def execute
         raise NotImplementedError
       end

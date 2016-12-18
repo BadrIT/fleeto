@@ -4,8 +4,6 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @current_customer = create(:customer, :verified)
-    @customer_location = random_location
-    Customers::LocationService.new(@current_customer).set_location(@customer_location)
     @headers = sign_in(@current_customer)
   end
 
@@ -25,17 +23,29 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should locate near drivers" do
+
+    @customer_location = random_location
+    Customers::LocationService.new(@current_customer).set_location(@customer_location)
+
     drivers = create_list(:driver, 3)
     drivers[1..-1].each{|driver| Drivers::LocationService.new(driver).set_location(random_location)}
     
-    Drivers::LocationService.new(drivers[0]).set_location(@customer_location)
-    
-    get '/customer/v1/locations/locate_near_drivers', headers: @headers, params: {
-      distance: 100
+    # setting a location within 0.01 difference in lat and long, the distance should be less than 5 KM
+    near_driver_location = {
+      lat: @customer_location[:lat] + 0.01,
+      long: @customer_location[:long] + 0.01
     }
 
-    drivers_locations = assigns(:drivers_locations)
-    assert drivers_locations.present?
+    Drivers::LocationService.new(drivers[0]).set_location(near_driver_location)
+    
+    get '/customer/v1/locations/locate_near_drivers', headers: @headers, params: {
+      distance: 10
+    }
+
+    res = JSON.parse(response.body)
+    assert res["min_duration"]["value"].present?
+    assert res["min_duration"]["text"].present?
+    assert res["drivers_locations"].present?
     assert_response :success
   end
 
