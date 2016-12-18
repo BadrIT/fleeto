@@ -39,8 +39,36 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     assert res["duration_in_traffic"].present?
   end
 
+  test "should calculate distance matrix from arriving driver to the customer" do
+    customer_location = random_location
+    Customers::LocationService.new(@current_customer).set_location(customer_location)
+
+    trip = create(:trip, status: Trip::WAITING_FOR_DRIVER,customer: @current_customer, from_long: customer_location[:long], from_lat: customer_location[:lat])
+    
+    driver = trip.driver
+    driver_location = {
+      long: customer_location[:long] + 0.1,
+      lat: customer_location[:lat] + 0.1
+    }
+    Drivers::LocationService.new(driver).set_location(driver_location)
+
+    get '/customer/v1/locations/distance_to_arriving_driver', headers: @headers
+
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert res["distance"].present?
+    assert res["duration"].present?
+    assert res["duration_in_traffic"].present?
+  end
+
+  test "should not calculate the distance matrix from arriving custome when there is no current trip" do
+    customer_location = random_location
+    Customers::LocationService.new(@current_customer).set_location(customer_location)
+    get '/customer/v1/locations/distance_to_arriving_driver', headers: @headers
+    assert_response :unprocessable_entity
+  end
+
   test "should locate near drivers" do
-    skip
     @customer_location = random_location
     Customers::LocationService.new(@current_customer).set_location(@customer_location)
 

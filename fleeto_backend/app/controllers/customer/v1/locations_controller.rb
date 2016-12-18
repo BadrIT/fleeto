@@ -12,6 +12,20 @@ class Customer::V1::LocationsController < Customer::V1::BaseController
     render json: distance_matrix
   end
 
+  def distance_to_arriving_driver
+    trip = @current_customer.current_trip
+    if trip.try(:status) == Trip::WAITING_FOR_DRIVER
+      driver = trip.driver
+      customer_location = Customers::LocationService.new(@current_customer).get_location
+      driver_location = Drivers::LocationService.new(driver).get_location
+      service = Map::Factory.new_service_adaptor(:distance_matrix).new(from: driver_location, to: customer_location)
+      distance_matrix = service.execute[0]["elements"][0]
+      render json: distance_matrix
+    else
+      render json: "There is no trip waiting for the driver to arrive", status: :unprocessable_entity
+    end
+  end
+
   def locate_near_drivers
     customer_location = Customers::LocationService.new(current_customer).get_location
     drivers_information = Drivers::LocationService.get_drivers_locations_within(params[:distance], customer_location)

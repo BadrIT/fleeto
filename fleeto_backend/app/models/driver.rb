@@ -7,8 +7,12 @@ class Driver < ActiveRecord::Base
 
   has_many :trips
 
+  def current_trip
+    trips.where.not(status: Trip::COMPLETED).first
+  end
+
   def in_a_trip?
-    false # TODO
+    trips.where.not(status: Trip::COMPLETED).any? # better not to use current trip as it will load the trip object
   end
 
 end
