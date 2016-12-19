@@ -12,8 +12,18 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
   test "should create a trip request" do
     trip_request = build(:trip_request)
 
-    driver = create(:driver)
-    Drivers::LocationService.new(driver).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+    available_driver = create(:driver)
+    Drivers::LocationService.new(available_driver).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+
+    driver_in_a_trip = create(:driver)
+    trip = create(:trip, status: Trip::ONGOING, driver: driver_in_a_trip)
+    Drivers::LocationService.new(driver_in_a_trip).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+
+    driver_pending_trip_request = create(:driver)
+    pending_trip_request = create(:trip_request)
+    pending_trip_request.drivers << driver_pending_trip_request
+    Drivers::LocationService.new(driver_pending_trip_request).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+
 
     assert_difference("TripRequest.count", 1) do
       perform_enqueued_jobs do # to send request to drivers
@@ -27,6 +37,12 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :created
+
+    trip_request = assigns(:trip_request)
+    drivers_who_received_trip_request = trip_request.drivers
+    
+    assert drivers_who_received_trip_request.count == 1
+    assert drivers_who_received_trip_request.first == available_driver
   end
 
   test "should not create a trip request without mandatory fields" do
@@ -61,7 +77,10 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
 
   test "should cancel a trip request" do
     trip_request = create(:trip_request, customer: @current_customer)
-    post "/customer/v1/trip_requests/#{trip_request.id}/cancel", headers: @headers
+    perform_enqueued_jobs do 
+      post "/customer/v1/trip_requests/#{trip_request.id}/cancel", headers: @headers
+    end
+    
     trip_request.reload
     assert trip_request.canceled?
     assert_response :no_content

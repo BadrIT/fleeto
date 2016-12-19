@@ -17,8 +17,21 @@ class Drivers::TripRequests::AcceptService
       from_lat: @trip_request.from_lat,
       status: Trip::WAITING_FOR_DRIVER
     )
-    # TODO send notifications to all other drivers that this trip request has been taken
-    # TODO send notification to the customer that this trip request is accepted
+
+    notify_other_drivers
+    notify_customer
   end
   
+  private
+
+  def notify_other_drivers
+    @trip_request.drivers.where.not(id: driver.id).each do |driver|
+      Drivers::SendTripRequestEventJob.perform_later(driver.id, trip_request.id, "trip_request_accepted")
+    end
+  end
+
+  def notify_customer
+    customer = trip_request.customer
+    Customers::SendTripRequestEventJob.perform_later(customer.id, trip_request.id, "trip_request_accepted")
+  end
 end

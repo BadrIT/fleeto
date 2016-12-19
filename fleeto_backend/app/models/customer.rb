@@ -26,5 +26,8 @@ class Customer < ActiveRecord::Base
     trips.where.not(status: Trip::COMPLETED).first
   end
 
+  def in_a_trip?
+    trips.where.not(status: Trip::COMPLETED).any?
+  end
 
 end
