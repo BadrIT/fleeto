@@ -9,7 +9,15 @@ class Customers::TripRequests::CancelService
 
   def execute
     @trip_request.cancel!
-    # TODO send notifications to nearby drivers/clear this customer from their map
+    notify_drivers
   end
   
+
+  private
+
+  def notify_drivers
+    @trip_request.drivers.each do |driver|
+      Drivers::SendTripRequestEventJob.perform_later(driver.id, trip_request.id, "trip_request_canceled")
+    end
+  end
 end

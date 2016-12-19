@@ -4,7 +4,7 @@ class Driver::V1::TripRequestsController < Driver::V1::BaseController
 
   def accept
     authorize @trip_request
-    Drivers::TripRequests::AcceptService.new(current_driver, @trip_request).execute
+    Drivers::TripRequests::AcceptService.new(@current_driver, @trip_request).execute
     head :no_content
   end
   private
