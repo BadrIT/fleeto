@@ -22,7 +22,7 @@ class Driver::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     # stored location is not exactly the same as input location, so we use approximation: we make sure that stored location
     # is within distance of 10 M from input location
     stored_location = Drivers::LocationService.new(@current_driver).get_location
-    res = Redis.new.georadius(Drivers::LocationService::KEY, input_location[:long], input_location[:lat], 10, :m)
+    res = Redis.new.georadius(Drivers::LocationService::KEY, input_location[:longitude], input_location[:latitude], 10, :m)
     assert res[0].to_i == @current_driver.id
   end
 

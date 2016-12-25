@@ -3,7 +3,7 @@ module Map
     class DistanceMatrix
 
 
-      # from and to, each can be a single hash({lat: <some_lat>, long: <some_long>}) or array of such hashes
+      # from and to, each can be a single hash({latitude: <some_lat>, longitude: <some_long>}) or array of such hashes
       def initialize(options = {})
         @options = self.class.default_options.deep_merge(options)
 

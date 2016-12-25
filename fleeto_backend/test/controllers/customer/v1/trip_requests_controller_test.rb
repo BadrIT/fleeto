@@ -13,24 +13,24 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     trip_request = build(:trip_request)
 
     available_driver = create(:driver)
-    Drivers::LocationService.new(available_driver).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+    Drivers::LocationService.new(available_driver).set_location(longitude: trip_request.from_longitude, latitude: trip_request.from_latitude)
 
     driver_in_a_trip = create(:driver)
     trip = create(:trip, status: Trip::ONGOING, driver: driver_in_a_trip)
-    Drivers::LocationService.new(driver_in_a_trip).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+    Drivers::LocationService.new(driver_in_a_trip).set_location(longitude: trip_request.from_longitude, latitude: trip_request.from_latitude)
 
     driver_pending_trip_request = create(:driver)
     pending_trip_request = create(:trip_request)
     pending_trip_request.drivers << driver_pending_trip_request
-    Drivers::LocationService.new(driver_pending_trip_request).set_location(long: trip_request.from_long, lat: trip_request.from_lat)
+    Drivers::LocationService.new(driver_pending_trip_request).set_location(longitude: trip_request.from_longitude, latitude: trip_request.from_latitude)
 
 
     assert_difference("TripRequest.count", 1) do
       perform_enqueued_jobs do # to send request to drivers
         post '/customer/v1/trip_requests', headers: @headers, params: {
           trip_request: {
-            from_lat: trip_request.from_lat,
-            from_long: trip_request.from_long
+            from_latitude: trip_request.from_latitude,
+            from_longitude: trip_request.from_longitude
           }
         }
       end
@@ -66,8 +66,8 @@ class Customer::V1::TripRequestsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("TripRequest.count", 0) do
       post '/customer/v1/trip_requests', headers: @headers, params: {
         trip_request: {
-          from_lat: trip_request.from_lat,
-          from_long: trip_request.from_long
+          from_latitude: trip_request.from_latitude,
+          from_longitude: trip_request.from_longitude
         }
       }
     end

@@ -8,8 +8,8 @@ class Customers::TripRequests::SendToNearDriversService
 
   def execute
     from_location = {
-      long: @trip_request.from_long,
-      lat: @trip_request.from_lat
+      longitude: @trip_request.from_longitude,
+      latitude: @trip_request.from_latitude
     }
     drivers_information = Drivers::LocationService.get_drivers_locations_within(TripRequest::DISTANCE_IN_KM_TO_SEARCH_DRIVERS_WITHIN, from_location)
     drivers = drivers_information.select{|driver_info| driver_info[:driver].available?}.map{|driver_info| driver_info[:driver]}

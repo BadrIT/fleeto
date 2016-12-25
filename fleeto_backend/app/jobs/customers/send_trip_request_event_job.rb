@@ -6,7 +6,7 @@ class Customers::SendTripRequestEventJob < ApplicationJob
     trip_request = TripRequest.find(trip_request_id)
     CustomersChannel.broadcast_to(customer, {
       key: event,
-      data: trip_request.as_json(only: [:id, :from_lat, :from_long, :to_lat, :to_long, :status])
+      data: trip_request.as_json(only: [:id, :from_latitude, :from_longitude, :to_latitude, :to_longitude, :status])
     })
   end
 

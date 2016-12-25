@@ -19,7 +19,7 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     # stored location is not exactly the same as input location, so we use approximation: we make sure that stored location
     # is within distance of 10 M from input location
     stored_location = Customers::LocationService.new(@current_customer).get_location
-    res = Redis.new.georadius(Customers::LocationService::KEY, input_location[:long], input_location[:lat], 10, :m)
+    res = Redis.new.georadius(Customers::LocationService::KEY, input_location[:longitude], input_location[:latitude], 10, :m)
     assert res[0].to_i == @current_customer.id
   end
 
@@ -27,8 +27,8 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     source_location = random_location
     Customers::LocationService.new(@current_customer).set_location(source_location)
     drop_off_location = {
-      long: source_location[:long] + 0.1,
-      lat: source_location[:lat] + 0.1,
+      longitude: source_location[:longitude] + 0.1,
+      latitude: source_location[:latitude] + 0.1,
     }
     get '/customer/v1/locations/distance_matrix_to_drop_off_location', headers: @headers, params: drop_off_location
     
@@ -43,12 +43,12 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     customer_location = random_location
     Customers::LocationService.new(@current_customer).set_location(customer_location)
 
-    trip = create(:trip, status: Trip::WAITING_FOR_DRIVER,customer: @current_customer, from_long: customer_location[:long], from_lat: customer_location[:lat])
+    trip = create(:trip, status: Trip::WAITING_FOR_DRIVER,customer: @current_customer, from_longitude: customer_location[:longitude], from_latitude: customer_location[:latitude])
     
     driver = trip.driver
     driver_location = {
-      long: customer_location[:long] + 0.1,
-      lat: customer_location[:lat] + 0.1
+      longitude: customer_location[:longitude] + 0.1,
+      latitude: customer_location[:latitude] + 0.1
     }
     Drivers::LocationService.new(driver).set_location(driver_location)
 
@@ -77,8 +77,8 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     
     # setting a location within 0.01 difference in lat and long, the distance should be less than 5 KM
     near_driver_location = {
-      lat: @customer_location[:lat] + 0.01,
-      long: @customer_location[:long] + 0.01
+      latitude: @customer_location[:latitude] + 0.01,
+      longitude: @customer_location[:longitude] + 0.01
     }
 
     Drivers::LocationService.new(drivers[0]).set_location(near_driver_location)

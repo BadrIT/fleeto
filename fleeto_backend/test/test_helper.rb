@@ -15,8 +15,8 @@ module RedisHelper
 
   def random_location
     {
-      long: Faker::Address.longitude,
-      lat: Faker::Address.latitude
+      longitude: Faker::Address.longitude,
+      latitude: Faker::Address.latitude
     }
   end
 end
@@ -62,9 +62,9 @@ module Faker
   end
 end
 
-TANTA = {lat: 30.790163, long: 31}
-CAIRO = {lat: 30.045691, long: 31.224296} 
-ALEXANRIA = {lat: 31.229099, long: 29.954884}
-DAMANHOUR = {lat: 31.036960, long: 30.457994}
+TANTA = {latitude: 30.790163, longitude: 31}
+CAIRO = {latitude: 30.045691, longitude: 31.224296} 
+ALEXANRIA = {latitude: 31.229099, longitude: 29.954884}
+DAMANHOUR = {latitude: 31.036960, longitude: 30.457994}
 
 CITIES = [TANTA, CAIRO, ALEXANRIA, DAMANHOUR]
