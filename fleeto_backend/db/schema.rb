@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161219063545) do
+ActiveRecord::Schema.define(version: 20161225082741) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "provider",                             default: "email", null: false
@@ -99,12 +99,12 @@ ActiveRecord::Schema.define(version: 20161219063545) do
 
   create_table "trip_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "customer_id"
-    t.float    "from_lat",    limit: 24
-    t.float    "from_long",   limit: 24
-    t.float    "to_lat",      limit: 24
-    t.float    "to_long",     limit: 24
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.float    "from_latitude",  limit: 24
+    t.float    "from_longitude", limit: 24
+    t.float    "to_latitude",    limit: 24
+    t.float    "to_longitude",   limit: 24
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.string   "status"
     t.index ["customer_id"], name: "index_trip_requests_on_customer_id", using: :btree
   end
@@ -112,10 +112,10 @@ ActiveRecord::Schema.define(version: 20161219063545) do
   create_table "trips", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "customer_id"
     t.integer  "driver_id"
-    t.float    "from_long",       limit: 24
-    t.float    "from_lat",        limit: 24
-    t.float    "to_long",         limit: 24
-    t.float    "to_lat",          limit: 24
+    t.float    "from_longitude",  limit: 24
+    t.float    "from_latitude",   limit: 24
+    t.float    "to_longitude",    limit: 24
+    t.float    "to_latitude",     limit: 24
     t.datetime "started_at"
     t.datetime "ended_at"
     t.string   "status"

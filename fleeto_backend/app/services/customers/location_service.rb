@@ -8,14 +8,14 @@ module Customers
     end
 
     def set_location(location)
-      Redis.new.geoadd KEY, location[:long], location[:lat], @customer.id
+      Redis.new.geoadd KEY, location[:longitude], location[:latitude], @customer.id
     end
 
     def get_location
       long, lat = Redis.new.geopos(KEY, @customer.id)[0]
       {
-        long: long,
-        lat: lat
+        longitude: long,
+        latitude: lat
       }
     end
 

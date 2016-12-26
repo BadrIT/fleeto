@@ -13,8 +13,8 @@ class Drivers::TripRequests::AcceptService
       customer: @trip_request.customer,
       driver: @driver,
       trip_request: @trip_request,
-      from_long: @trip_request.from_long,
-      from_lat: @trip_request.from_lat,
+      from_longitude: @trip_request.from_longitude,
+      from_latitude: @trip_request.from_latitude,
       status: Trip::WAITING_FOR_DRIVER
     )
 

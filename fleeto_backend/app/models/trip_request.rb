@@ -4,7 +4,7 @@ class TripRequest < ApplicationRecord
   
   has_one :trip
   
-  validates :from_lat, :from_long, presence: true
+  validates :from_latitude, :from_longitude, presence: true
 
   validate :customer_is_not_in_a_trip
 
@@ -12,7 +12,7 @@ class TripRequest < ApplicationRecord
   enum_string :status, STATUSES
 
   # TODO this should be configurable from the admin
-  DISTANCE_IN_KM_TO_SEARCH_DRIVERS_WITHIN = 5
+  DISTANCE_IN_KM_TO_SEARCH_DRIVERS_WITHIN = 1000
 
   def accept!
     update_columns(status: ACCEPTED)
