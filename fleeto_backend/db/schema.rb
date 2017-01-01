@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161225082741) do
+ActiveRecord::Schema.define(version: 20161226090648) do
+
+  create_table "customer_trip_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "trip_id"
+    t.text     "comment",    limit: 65535
+    t.integer  "rating"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["trip_id"], name: "index_customer_trip_feedbacks_on_trip_id", using: :btree
+  end
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "provider",                             default: "email", null: false
@@ -127,4 +136,5 @@ ActiveRecord::Schema.define(version: 20161225082741) do
     t.index ["trip_request_id"], name: "index_trips_on_trip_request_id", using: :btree
   end
 
+  add_foreign_key "customer_trip_feedbacks", "trips"
 end

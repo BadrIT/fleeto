@@ -34,7 +34,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :trips, only: [:index, :show]
+      resources :trips, only: [:index, :show] do
+        member do
+          post :feedback
+        end
+      end
 
     end
 
