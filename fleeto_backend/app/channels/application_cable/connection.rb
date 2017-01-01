@@ -9,8 +9,10 @@ module ApplicationCable
     protected
       # https://www.sitepoint.com/create-a-chat-app-with-rails-5-actioncable-and-devise/ 
       def find_verified_user # this checks whether a user is authenticated with devise
-        if verified_user = env['warden'].user
-          verified_user
+        #TODO distinguish between customer and driver
+        customer = Customer.find_by(email: request.params[:uid])
+        if customer && customer.valid_token?(request.params["access-token"], request.params[:client])
+          verified_user = customer
         else
           reject_unauthorized_connection
         end
