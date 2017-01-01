@@ -30,7 +30,7 @@ class Customer::V1::LocationsController < Customer::V1::BaseController
 
   def locate_near_drivers
     customer_location = Customers::LocationService.new(current_customer).get_location
-    drivers_information = Drivers::LocationService.get_drivers_locations_within(params[:distance] ||TripRequest::DISTANCE_IN_KM_TO_SEARCH_DRIVERS_WITHIN, customer_location)
+    drivers_information = Drivers::LocationService.get_drivers_locations_within(params[:distance] || TripRequest::DISTANCE_IN_KM_TO_SEARCH_DRIVERS_WITHIN, customer_location)
     drivers_locations = drivers_information.select{|driver_info| !driver_info[:driver].in_a_trip?}.map{|driver_info| driver_info[:location]}
 
     servicClasss = Map::Factory.new_service_adaptor(:distance_matrix)
