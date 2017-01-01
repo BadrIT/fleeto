@@ -25,7 +25,7 @@ module Map
       end
 
       def convert_locations_to_url_params(locations)
-        locations.map{|location| "#{location[:lat]},#{location[:long]}"}.join("|")
+        locations.map{|location| "#{location[:latitude]},#{location[:longitude]}"}.join("|")
       end
 
       def self.default_options

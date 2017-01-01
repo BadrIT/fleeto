@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   namespace :customer do
     api_version(:module => "V1", :path => {:value => "v1"}) do
-      
+
       mount_devise_token_auth_for 'Customer', at: 'auth', controllers: {
         sessions: "customer/v1/sessions",
         registrations: "customer/v1/registrations"
@@ -34,6 +34,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :trips, only: [:index, :show]
+
     end
 
   end
@@ -57,6 +59,7 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :trips, only: [:index, :show]
     end
   end
 
