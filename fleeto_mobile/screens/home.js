@@ -26,14 +26,17 @@ export default class Home extends React.Component{
   constructor(props){
     super(props);
     this._logout = this._logout.bind(this);
+    this.orderNow = this.orderNow.bind(this);
     this.state = {
       loading: true,
+      status: null,
       longitude: null,
       latitude: null,
       latitudeDelta: 0.015,
       longitudeDelta: 0.0121,
       drivers: [],
-      minDuration: null
+      minDuration: null,
+      driverArrivingDuration: null
     }
   }
 
@@ -70,7 +73,7 @@ export default class Home extends React.Component{
       headers['Content-Type'] = 'application/json';
       return fetch(`${constants.BASE_URL}customer/v1/locations/locate_near_drivers`, {
         method: "get",
-        headers: headers
+        headers: headers,
       }).then((response) => {
         return response.json();
       }).then((responseJSON) => {
@@ -111,8 +114,20 @@ export default class Home extends React.Component{
 
       self.ws.onmessage = (e) => {
         var data = JSON.parse(e.data);
-        if(typeof(data.message) == "object" && data.message.action == "drivers_locations_updated"){
-          self.locateNearDrivers();
+        if(typeof(data.message) == "object"){
+          if(data.message.key == "trip_request_accepted"){
+            this.setState({
+              status: "waitingForDriverArrival",
+              driverArrivingDuration: "N/A"
+            })
+          }else if (data.message.key == "arriving_driver_location_changed"){
+            const drivers = [];
+            drivers.push(data.message.data.driver_location);
+            this.setState({
+              drivers: drivers,
+              driverArrivingDuration: data.message.data.arriving_duration
+            })
+          }
         }
         // a message was received
         console.log(data);
@@ -131,15 +146,39 @@ export default class Home extends React.Component{
 
   }
 
+  orderNow(){
+    AsyncStorage.getItem(constants.AUTH_KEY).then(result => {
+      var authHeaders = JSON.parse(result);
+      var headers = authHeaders;
+      headers['Accept'] = 'application/json';
+      headers['Content-Type'] = 'application/json';
+      return fetch(`${constants.BASE_URL}customer/v1/trip_requests`, {
+        method: "post",
+        headers: headers
+      }).then((response) => {
+        if(response.status == 201){
+          this.clearInterval(this.locateNearDriverInterval);
+          this.setState({
+            status: "waitingForOrderAcceptance"
+          })
+        }
+      });
+    });
+  }
+
   componentDidMount(){
+    this.setupWebsocket();
     navigator.geolocation.getCurrentPosition((positionInfo) => {
       this.saveCurrentLocation(positionInfo.coords).then(() => {
+        this.initialLatitude = positionInfo.coords.latitude;
+        this.initialLongitude = positionInfo.coords.longitude;
         this.setState({
           loading: false,
+          status: "idle",
           latitude: positionInfo.coords.latitude,
           longitude: positionInfo.coords.longitude
         });
-        this.setInterval(
+        this.locateNearDriverInterval = this.setInterval(
           () => {this.locateNearDrivers();},
           5000
         );
@@ -153,6 +192,38 @@ export default class Home extends React.Component{
       timeout: 20000,
       maximumAge: 1000
     }
+    );
+  }
+
+  renderIdle(){
+    return(
+      <View style={styles.container}>
+        <Text style={styles.minDuration}>
+          Nearest driver: {this.state.minDuration || "N/A"}
+        </Text>
+        <Button
+          style={styles.orderNow}
+          title="Order now"
+          onPress={this.orderNow}
+          key="orderNow"
+        />
+      </View>
+    )
+  }
+
+  renderWaitingForOrderAcceptance(){
+    return(
+      <Text style={styles.minDuration}>
+        Waiting for some driver to accept....
+      </Text>
+    );
+  }
+
+  renderWaitingForDriverArrival(){
+    return(
+      <Text style={styles.minDuration}>
+        Time until driver arrives: {this.state.driverArrivingDuration}
+      </Text>
     );
   }
 
@@ -188,15 +259,25 @@ export default class Home extends React.Component{
             })
           }}
         >
+        <MapView.Marker
+          draggable
+          coordinate={{latitude: this.initialLatitude, longitude: this.initialLongitude}}
+          onDragEnd={(e) => this.saveCurrentLocation(e.nativeEvent.coordinate)}
+          pinColor="blue"
+          title="Your location"
+          description="Your location"
+        />
         {markers}
         </MapView>
-        <Text style={styles.minDuration}>
-          Nearest driver: {this.state.minDuration || "N/A"}
-        </Text>
+        {this.state.status == "idle" && this.renderIdle()}
+        {this.state.status == "waitingForOrderAcceptance" && this.renderWaitingForOrderAcceptance()}
+        {this.state.status == "waitingForDriverArrival" && this.renderWaitingForDriverArrival()}
         <Button
           style={styles.logout}
           title="Logout"
           onPress={this._logout}
+          color="red"
+          key="logout"
         />
       </View>
     );
@@ -227,7 +308,9 @@ const styles = StyleSheet.create({
   },
   logout:{
     flex: 1,
-    color: "gray",
+  },
+  orderNow:{
+    flex: 1,
   },
   centering: {
     alignItems: 'center',

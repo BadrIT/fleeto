@@ -3,8 +3,8 @@ class Customer::V1::TripRequestsController < Customer::V1::BaseController
   before_action :set_trip_request, only: [:cancel]
 
   def create
-    Customers::LocationService.new(current_customer).set_location(longitude: trip_request_params[:from_longitude], latitude: trip_request_params[:from_latitude])
-    @trip_request = Customers::TripRequests::CreateService.new(current_customer, trip_request_params).execute
+    customer_location = Customers::LocationService.new(current_customer).get_location
+    @trip_request = Customers::TripRequests::CreateService.new(current_customer, trip_request_params.merge(from_latitude: customer_location[:latitude], from_longitude: customer_location[:longitude])).execute
     if @trip_request.persisted?
       Customers::TripRequests::SendToNearDriversService.new(@trip_request).execute
       render json: "Trip request created succesfully", status: :created
@@ -26,6 +26,6 @@ class Customer::V1::TripRequestsController < Customer::V1::BaseController
   end
 
   def trip_request_params
-    params.require(:trip_request).permit(:from_latitude, :from_longitude, :to_latitude, :to_longitude)
+    params[:trip_request].permit(:to_latitude, :to_longitude)
   end
 end
