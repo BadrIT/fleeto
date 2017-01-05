@@ -2,7 +2,7 @@ class Driver::V1::LocationsController < Driver::V1::BaseController
 
   def set_location
     Drivers::LocationService.new(current_driver).set_location(longitude: params[:longitude], latitude: params[:latitude])
-    if current_driver.in_a_trip? && current_driver.current_trip.waiting_for_driver?
+    if current_driver.in_a_trip? && current_driver.current_trip.WAITING_FOR_DRIVER_ARRIVAL?
       current_trip = current_driver.current_trip
       driver_location = Drivers::LocationService.new(current_driver).get_location
       customer_location = Customers::LocationService.new(current_trip.customer).get_location

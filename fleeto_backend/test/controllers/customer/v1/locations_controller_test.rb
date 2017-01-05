@@ -43,7 +43,7 @@ class Customer::V1::LocationsControllerTest < ActionDispatch::IntegrationTest
     customer_location = random_location
     Customers::LocationService.new(@current_customer).set_location(customer_location)
 
-    trip = create(:trip, status: Trip::WAITING_FOR_DRIVER,customer: @current_customer, from_longitude: customer_location[:longitude], from_latitude: customer_location[:latitude])
+    trip = create(:trip, status: Trip::WAITING_FOR_DRIVER_ARRIVAL,customer: @current_customer, from_longitude: customer_location[:longitude], from_latitude: customer_location[:latitude])
     
     driver = trip.driver
     driver_location = {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161226090648) do
+ActiveRecord::Schema.define(version: 20170103120018) do
 
   create_table "customer_trip_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "trip_id"
@@ -97,30 +97,17 @@ ActiveRecord::Schema.define(version: 20161226090648) do
     t.index ["uid", "provider"], name: "index_drivers_on_uid_and_provider", unique: true, using: :btree
   end
 
-  create_table "drivers_trip_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "trip_request_id"
+  create_table "drivers_trips", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "trip_id"
     t.integer  "driver_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["driver_id"], name: "index_drivers_trip_requests_on_driver_id", using: :btree
-    t.index ["trip_request_id"], name: "index_drivers_trip_requests_on_trip_request_id", using: :btree
-  end
-
-  create_table "trip_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "customer_id"
-    t.float    "from_latitude",  limit: 24
-    t.float    "from_longitude", limit: 24
-    t.float    "to_latitude",    limit: 24
-    t.float    "to_longitude",   limit: 24
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "status"
-    t.index ["customer_id"], name: "index_trip_requests_on_customer_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["driver_id"], name: "index_drivers_trips_on_driver_id", using: :btree
+    t.index ["trip_id"], name: "index_drivers_trips_on_trip_id", using: :btree
   end
 
   create_table "trips", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "customer_id"
-    t.integer  "driver_id"
     t.float    "from_longitude",  limit: 24
     t.float    "from_latitude",   limit: 24
     t.float    "to_longitude",    limit: 24
@@ -130,10 +117,9 @@ ActiveRecord::Schema.define(version: 20161226090648) do
     t.string   "status"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.integer  "driver_id"
     t.integer  "trip_request_id"
     t.index ["customer_id"], name: "index_trips_on_customer_id", using: :btree
-    t.index ["driver_id"], name: "index_trips_on_driver_id", using: :btree
-    t.index ["trip_request_id"], name: "index_trips_on_trip_request_id", using: :btree
   end
 
   add_foreign_key "customer_trip_feedbacks", "trips"

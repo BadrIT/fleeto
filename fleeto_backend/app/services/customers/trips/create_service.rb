@@ -1,4 +1,4 @@
-class Customers::TripRequests::CreateService
+class Customers::Trips::CreateService
 
   attr_accessor :customer, :params
 
@@ -8,8 +8,8 @@ class Customers::TripRequests::CreateService
   end
   
   def execute
-    trip_request = TripRequest.create(params.merge(customer: customer))
-    trip_request
+    trip = Trip.create(params.merge(customer: customer, status: Trip::PENDING))
+    trip
   end
   
 end

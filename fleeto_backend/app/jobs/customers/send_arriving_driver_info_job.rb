@@ -1,5 +1,5 @@
 class Customers::SendArrivingDriverInfoJob < ApplicationJob
-  queue_as :drivers_trip_requests
+  queue_as :drivers_trips
 
   def perform(customer_id, driver_id, arriving_duration)
     customer = Customer.find(customer_id)

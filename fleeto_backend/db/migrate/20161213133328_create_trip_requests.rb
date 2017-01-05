@@ -1,4 +1,4 @@
-class CreateTripRequests < ActiveRecord::Migration[5.0]
+class CreateTrips < ActiveRecord::Migration[5.0]
   def change
     create_table :trip_requests do |t|
       t.belongs_to :customer, index: true

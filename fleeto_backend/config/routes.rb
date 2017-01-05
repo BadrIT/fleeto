@@ -28,13 +28,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :trip_requests, only: [:create] do
-        member do
-          post :cancel
-        end
-      end
-
-      resources :trips, only: [:index, :show] do
+      resources :trips, only: [:index, :create, :show] do
         member do
           post :feedback
         end
@@ -57,13 +51,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :trip_requests, only: [] do
+      resources :trips, only: [:index, :show] do
         member do
           post :accept
         end
       end
-
-      resources :trips, only: [:index, :show]
     end
   end
 

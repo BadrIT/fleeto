@@ -8,7 +8,6 @@ FactoryGirl.define do
     from_longitude {Faker::Address.longitude}
     to_latitude {Faker::Address.latitude}
     to_longitude {Faker::Address.longitude}
-    status {Trip::STATUSES.sample}
-
+    status {Trip::PENDING}
   end
 end
