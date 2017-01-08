@@ -152,7 +152,7 @@ export default class Home extends React.Component{
       var headers = authHeaders;
       headers['Accept'] = 'application/json';
       headers['Content-Type'] = 'application/json';
-      return fetch(`${constants.BASE_URL}customer/v1/trip_requests`, {
+      return fetch(`${constants.BASE_URL}customer/v1/trips`, {
         method: "post",
         headers: headers
       }).then((response) => {
