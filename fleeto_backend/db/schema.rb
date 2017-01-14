@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161226090648) do
+ActiveRecord::Schema.define(version: 20170108093929) do
 
   create_table "customer_trip_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "trip_id"
@@ -66,6 +66,15 @@ ActiveRecord::Schema.define(version: 20161226090648) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+  end
+
+  create_table "driver_trip_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "trip_id"
+    t.text     "comment",    limit: 65535
+    t.integer  "rating"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["trip_id"], name: "index_driver_trip_feedbacks_on_trip_id", using: :btree
   end
 
   create_table "drivers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -137,4 +146,5 @@ ActiveRecord::Schema.define(version: 20161226090648) do
   end
 
   add_foreign_key "customer_trip_feedbacks", "trips"
+  add_foreign_key "driver_trip_feedbacks", "trips"
 end

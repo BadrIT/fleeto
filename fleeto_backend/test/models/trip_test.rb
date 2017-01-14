@@ -15,7 +15,7 @@ class TripTest < ActiveSupport::TestCase
 
     # Successfully creates a feedback
     @trip.status = Trip::COMPLETED
-    assert_nothing_raised(Trip::FeedbackError) { @trip.create_customer_feedback(comment, ratting) }
+    assert_nothing_raised { @trip.create_customer_feedback(comment, ratting) }
     assert_not_nil(@trip.customer_trip_feedback)
 
     # Doesn't add multiple feedbacks on the same trip
